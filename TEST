@@ -1,0 +1,78 @@
+
+
+import java.util.HashMap;
+
+class Singleton {
+    private static Singleton instance;
+    private  String name;
+
+
+    protected Singleton(String name) {
+        this.name = name;
+    }
+
+    public static Singleton getInstance(String name){
+
+        if(instance == null){
+            instance = new Singleton(name);
+        }
+        return instance;
+    }
+
+
+
+    public String toString() {
+        return name;
+    }
+}
+
+class SubSingleton extends Singleton {
+
+    private static HashMap<String, SubSingleton> subInstances = new HashMap<>();
+    private static int counter = 0;
+
+
+
+    private SubSingleton(String name) {
+        super(name);
+    }
+
+    public static void registerInstances(String[] names){
+
+        for(String name : names){
+            if(counter < 3){
+                subInstances.put(name, new SubSingleton(name));
+                counter ++;
+            }
+
+        }
+    }
+
+    public static SubSingleton getInstance(String name){
+        return subInstances.get(name);
+    }
+
+}
+
+public class TEST {
+    public static void main(String[] args) {
+        Singleton instance1 = Singleton.getInstance("I1");
+        Singleton instance2 = Singleton.getInstance("I2");
+
+        System.out.println(instance1);
+        System.out.println(instance2);
+
+        String[] names = {"SI1","SI2","SI3","SI4"};
+        SubSingleton.registerInstances(names);
+
+        SubSingleton subInstance1 = SubSingleton.getInstance("SI1");
+        SubSingleton subInstance2 = SubSingleton.getInstance("SI2");
+        SubSingleton subInstance3 = SubSingleton.getInstance("SI3");
+        SubSingleton subInstance4 = SubSingleton.getInstance("I DON'T WANT TO BE PRINTED");
+
+        System.out.println(subInstance1);
+        System.out.println(subInstance2);
+        System.out.println(subInstance3);
+        System.out.println(subInstance4);
+    }
+}
